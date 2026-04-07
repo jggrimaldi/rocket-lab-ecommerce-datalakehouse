@@ -1,0 +1,28 @@
+resources:
+  jobs:
+    New_Job_Apr_07_2026_11_51_AM:
+      name: New Job Apr 07, 2026, 11:51 AM
+      schedule:
+        quartz_cron_expression: 34 0 13 * * ?
+        timezone_id: America/Sao_Paulo
+        pause_status: UNPAUSED
+      tasks:
+        - task_key: Bronze_Ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/jggrimaldi12@gmail.com/Atividade_land_to_bronze
+            source: WORKSPACE
+        - task_key: Silver_Transformation
+          depends_on:
+            - task_key: Bronze_Ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/jggrimaldi12@gmail.com/Atividade_bronze_to_silver
+            source: WORKSPACE
+        - task_key: Gold_Data_Marts
+          depends_on:
+            - task_key: Silver_Transformation
+          notebook_task:
+            notebook_path: /Workspace/Users/jggrimaldi12@gmail.com/Atividade_silver_to_gold
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
